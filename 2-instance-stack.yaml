@@ -1,15 +1,19 @@
 Parameters:
   SubnetId:
     Type: String
+  VmSecurityGroup:
+    Type: String
 
 Mappings:
   RegionMap:
     ap-southeast-2:
       ami: "ami-06bb074d1e196d0d4"
       keypair: "test-aws-key"
+      environment: "dev"
     us-east-1:
       ami: "ami-0b0dcb5067f052a63"
       keypair: "useast1-keypair"
+      environment: "prod"
 
 Resources:
   Vm:

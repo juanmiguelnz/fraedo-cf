@@ -67,7 +67,7 @@ Resources:
         !Join
           - "-"
           - - !FindInMap
-              - RegionMap
+              - EnvTypeMap
               - Ref: AWS::Region
               - environment
             - Ref: AWS::StackName
@@ -90,14 +90,14 @@ Resources:
           !Join
             - "-"
             - - !FindInMap
-                - RegionMap
+                - EnvTypeMap
                 - Ref: AWS::Region
                 - environment
               - Ref: AWS::StackName
               - "igw"
       - Key: "Environment"
         Value: !FindInMap
-          - RegionMap
+          - EnvTypeMap
           - Ref: AWS::Region
           - environment
           
@@ -109,14 +109,16 @@ Resources:
       VpcId:
         Ref: Vpc
 
-  
-
 Outputs:
   CreatedVpcId:
     Description: VPC ID of the created VPC in this stack.
     Value:
-      Ref: VpcId
+      Ref: Vpc
   CreatedSubnetId:
     Description: Subnet ID of the created Subnet in this stack.
     Value:
-      Ref: SubnetId
+      Ref: Subnet
+  CreatedVmSecurityGroup:
+    Description: Group ID of the created Vm Security in this stack.
+    Value:
+      Ref: VmSecurityGroup

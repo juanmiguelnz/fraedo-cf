@@ -1,5 +1,15 @@
 Resources:
-  VpcStack:
+  NetworkStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: "https://fraedo-bucket.s3.ap-southeast-2.amazonaws.com/vpc-stack.yaml"
+      TemplateURL: "https://fraedo-bucket.s3.ap-southeast-2.amazonaws.com/1-network-stack.yaml"
+
+  InstanceStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - NetworkStack
+    Properties:
+      TemplateURL: "https://fraedo-bucket.s3.ap-southeast-2.amazonaws.com/2-instance-stack.yaml"
+      Parameters:
+        SubnetId: !GetAtt NetworkStack.Outputs.CreatedSubnetId
+        VmSecurityGroup: !GetAtt NetworkStack.Outputs.CreatedVmSecurityGroup
