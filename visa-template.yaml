@@ -1,0 +1,153 @@
+Parameters:
+  VpcCidrBlock:
+    Type: String
+    Description: Cidr block of the Vpc
+    Default: "10.10.0.0/16"
+  SubnetCidrBlock:
+    Type: String
+    Description: Cidr block of the Subnet
+    Default: "10.10.0.0/24"
+  VmSshKey:
+    Type: String
+    Description: Key pair for the Virtual Machine
+    Default: "test-aws-key"
+  StorageNamePrefix:
+    Type: String
+    Description: S3 Storage Name
+    Default: "visa"
+
+Mappings:
+  RegionMap:
+    ap-southeast-2:
+      ami: "ami-06bb074d1e196d0d4"
+      keypair: "test-aws-key"
+      environment: "dev"
+    us-east-1:
+      ami: "ami-0b0dcb5067f052a63"
+      keypair: "useast1-keypair"
+      environment: "prod"
+
+Resources:
+  Vpc:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock:
+        Ref: VpcCidrBlock
+      EnableDnsHostnames: True
+      EnableDnsSupport: True
+      Tags:
+        - Key: "Name"
+          Value:
+            !Join
+              - "-"
+              - - !FindInMap
+                  - RegionMap
+                  - Ref: AWS::Region
+                  - environment
+                - Ref: AWS::StackName
+                - "vpc"
+        - Key: "Environment"
+          Value: !FindInMap
+            - RegionMap
+            - Ref: AWS::Region
+            - environment
+
+  Subnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      CidrBlock:
+        Ref: SubnetCidrBlock
+      MapPublicIpOnLaunch: true
+      VpcId:
+        Ref: Vpc
+      Tags:
+        - Key: "Name"
+          Value:
+            !Join
+              - "-"
+              - - !FindInMap
+                  - RegionMap
+                  - Ref: AWS::Region
+                  - environment
+                - Ref: AWS::StackName
+                - "subnet"
+
+  VmSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupName:
+        !Join
+          - "-"
+          - - !FindInMap
+              - RegionMap
+              - Ref: AWS::Region
+              - environment
+            - Ref: AWS::StackName
+            - "sg" 
+      GroupDescription: "Security Group for Virtual Machines"
+      VpcId:
+        Ref: Vpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+  Igw:
+    Type: "AWS::EC2::InternetGateway"
+    Properties:
+      Tags:
+      - Key: "Name"
+        Value:
+          !Join
+            - "-"
+            - - !FindInMap
+                - RegionMap
+                - Ref: AWS::Region
+                - environment
+              - Ref: AWS::StackName
+              - "igw"
+      - Key: "Environment"
+        Value: !FindInMap
+          - RegionMap
+          - Ref: AWS::Region
+          - environment
+          
+  IgwAttach:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      InternetGatewayId:
+        Ref: Igw
+      VpcId:
+        Ref: Vpc
+
+  Vm:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      KeyName: !FindInMap
+        - RegionMap
+        - Ref: AWS::Region
+        - keypair
+      InstanceType: "t2.micro"
+      ImageId: !FindInMap
+        - RegionMap
+        - Ref: AWS::Region
+        - ami
+      SubnetId: !GetAtt Subnet.SubnetId
+      SecurityGroupIds:
+        - Ref: VmSecurityGroup
+      Tags:
+        - Key: "Name"
+          Value:
+            !Join
+              - "-"
+              - - !FindInMap
+                  - RegionMap
+                  - Ref: AWS::Region
+                  - environment
+                - Ref: AWS::StackName
+                - "vm" 
+
+  Storage1:
+    Type: "AWS::S3::Bucket"
+  
