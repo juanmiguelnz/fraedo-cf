@@ -1,0 +1,41 @@
+Parameters:
+  SubnetId:
+    Type: String
+
+Mappings:
+  RegionMap:
+    ap-southeast-2:
+      ami: "ami-06bb074d1e196d0d4"
+      keypair: "test-aws-key"
+    us-east-1:
+      ami: "ami-0b0dcb5067f052a63"
+      keypair: "useast1-keypair"
+
+Resources:
+  Vm:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: !FindInMap
+        - RegionMap
+        - Ref: AWS::Region
+        - keypair
+      InstanceType: "t2.micro"
+      ImageId: !FindInMap
+        - RegionMap
+        - Ref: AWS::Region
+        - ami
+      SubnetId:
+        Ref: SubnetId
+      SecurityGroupIds:
+        - Ref: VmSecurityGroup
+      Tags:
+        - Key: "Name"
+          Value:
+            !Join
+              - "-"
+              - - !FindInMap
+                  - RegionMap
+                  - Ref: AWS::Region
+                  - environment
+                - Ref: AWS::StackName
+                - "vm" 

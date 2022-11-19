@@ -1,5 +1,0 @@
-Resources:
-  VpcStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: ""
