@@ -77,7 +77,7 @@ Resources:
         Ref: Vpc
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 0
+          FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
 
