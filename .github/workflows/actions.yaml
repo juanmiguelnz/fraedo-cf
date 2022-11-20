@@ -12,7 +12,7 @@ jobs:
       - name: aws authentication
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: arn:aws:iam::513147638865:role/fraedo-cf-gh-actions-role
           aws-region: ap-southeast-2
       
       - name: run aws cli commands
