@@ -1,0 +1,19 @@
+name: Create CloudFormation stack.
+
+on: push
+
+jobs:
+  create_stack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: aws authentication
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ap-southeast-2
+      
+      - name: run aws cli commands
+        run: aws s3 ls
