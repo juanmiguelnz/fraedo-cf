@@ -20,4 +20,4 @@ jobs:
           aws-region: ap-southeast-2
       
       - name: run aws cli commands
-        run: pwd
+        run: aws s3 cp /home/runner/work/fraedo-cf/fraedo-cf/ s3://fraedo-bucket --recursive --exclude "LICENSE" --exclude "*.md" --exclude ".git/*"
