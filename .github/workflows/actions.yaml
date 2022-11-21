@@ -27,7 +27,7 @@ jobs:
         run: |
           STACKNAME="cf-${{ github.run_number }}"
           aws cloudformation create-stack --stack-name $STACKNAME --template-body file://0-root-stack.yaml
-          sleep 300
+          sleep 180
 
       - name: delete cf stack
         if: steps.create_stack.outcome == 'success'
