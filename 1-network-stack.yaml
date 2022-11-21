@@ -112,7 +112,8 @@ Resources:
   RouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: Vpc
+      VpcId:
+        Ref: Vpc
   
   Routes:
     Type: AWS::EC2::Route
