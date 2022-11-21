@@ -124,6 +124,14 @@ Resources:
       GatewayId:
         Ref: Igw
 
+  RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: RouteTable
+      SubnetId:
+        Ref: Subnet
+
 Outputs:
   CreatedVpcId:
     Description: VPC ID of the created VPC in this stack.
