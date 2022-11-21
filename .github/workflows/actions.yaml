@@ -22,7 +22,13 @@ jobs:
       - name: run aws cli commands
         run: aws s3 cp /home/runner/work/fraedo-cf/fraedo-cf/ s3://fraedo-bucket --recursive --exclude "LICENSE" --exclude "*.md" --exclude ".git/*"
 
-      - name: create cf stack.
+      - name: create cf stack
+        id: create_stack
         run: |
           STACKNAME="cf-${{ github.run_number }}"
           aws cloudformation create-stack --stack-name $STACKNAME --template-body file://0-root-stack.yaml
+          sleep 300
+
+      - name: delete cf stack
+        if: steps.create_stack.outcome == "success"
+        run: aws cloudformation delete-stack --stack-name $STACKNAME
