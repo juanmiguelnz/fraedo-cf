@@ -31,4 +31,6 @@ jobs:
 
       - name: delete cf stack
         if: steps.create_stack.outcome == 'success'
-        run: aws cloudformation delete-stack --stack-name $STACKNAME
+        run: |
+          STACKNAME="cf-${{ github.run_number }}"
+          aws cloudformation delete-stack --stack-name $STACKNAME
