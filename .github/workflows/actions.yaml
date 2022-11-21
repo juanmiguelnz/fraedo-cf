@@ -23,4 +23,4 @@ jobs:
         run: aws s3 cp /home/runner/work/fraedo-cf/fraedo-cf/ s3://fraedo-bucket --recursive --exclude "LICENSE" --exclude "*.md" --exclude ".git/*"
 
       - name: create cf stack.
-        run: aws cloudformation create-stack --stack-name TestSshPort --template-body file://0-root-stack.yaml
+        run: aws cloudformation create-stack --stack-name ${{ github.run_id }} --template-body file://0-root-stack.yaml
