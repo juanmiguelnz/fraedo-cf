@@ -25,4 +25,4 @@ jobs:
       - name: create cf stack.
         run: |
           STACKNAME="cf-${{ github.run_number }}"
-          aws cloudformation create-stack --stack-name  --template-body file://0-root-stack.yaml
+          aws cloudformation create-stack --stack-name $STACKNAME --template-body file://0-root-stack.yaml
